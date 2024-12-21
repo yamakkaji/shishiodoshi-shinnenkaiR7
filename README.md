@@ -4,5 +4,5 @@
 
 To run, 
 
-1. install (Pyxel)[https://github.com/kitao/pyxel/blob/main/docs/README.ja.md]
+1. install [Pyxel](https://github.com/kitao/pyxel/blob/main/docs/README.ja.md)
 2. `python main.py`
