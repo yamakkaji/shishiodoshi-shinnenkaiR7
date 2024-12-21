@@ -1,5 +1,5 @@
 import pyxel
-import numpy as np
+# import numpy as np
 
 WINDOW_ASPECT = 1.33
 WINDOW_SCALE = 100
@@ -51,7 +51,7 @@ class App:
         self.initial_saito_pos = self.saito_pos
         self.initial_tsukaji_pos = self.tsukaji_pos
 
-        self.snowflakes = [[np.random.randint(0, WINDOW_W), np.random.randint(0, WINDOW_H)] for _ in range(100)]
+        # self.snowflakes = [[np.random.randint(0, WINDOW_W), np.random.randint(0, WINDOW_H)] for _ in range(100)]
         
         # pyxel.playm(0, loop=True)
         pyxel.run(self.update, self.draw)
@@ -61,12 +61,11 @@ class App:
             self.scene = SCENE_CONCERT
 
     def update(self):
-        # Update snowflakes
-        for flake in self.snowflakes:
-            flake[1] += 1
-            if flake[1] > WINDOW_H:
-                flake[0] = np.random.randint(0, WINDOW_W)
-                flake[1] = 0
+        # for flake in self.snowflakes:
+        #     flake[1] += 1
+        #     if flake[1] > WINDOW_H:
+        #         flake[0] = np.random.randint(0, WINDOW_W)
+        #         flake[1] = 0
 
         if self.scene == SCENE_TITLE:
             self.update_title_scene()
@@ -75,10 +74,10 @@ class App:
                 pyxel.playm(0, loop=True)
                 self.music_on = True
             # Random walk for each character (Kuchan, Iwaki, Saito, Tsukaji), but stay in the window
-            self.kuchan_pos = np.clip(np.array(self.kuchan_pos) + np.random.randint(-1, 2, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
-            self.iwaki_pos = np.clip(np.array(self.iwaki_pos) + np.random.randint(-1, 2, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
-            self.saito_pos = np.clip(np.array(self.saito_pos) + np.random.randint(-1, 2, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
-            self.tsukaji_pos = np.clip(np.array(self.tsukaji_pos) + np.random.randint(-1, 2, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
+            # self.kuchan_pos = np.clip(np.array(self.kuchan_pos) + np.random.randint(-1, 2, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
+            # self.iwaki_pos = np.clip(np.array(self.iwaki_pos) + np.random.randint(-1, 2, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
+            # self.saito_pos = np.clip(np.array(self.saito_pos) + np.random.randint(-1, 2, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
+            # self.tsukaji_pos = np.clip(np.array(self.tsukaji_pos) + np.random.randint(-1, 2, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
 
     def draw(self):
         if self.scene == SCENE_TITLE:
@@ -109,7 +108,7 @@ class App:
                 pyxel.blt(0, WINDOW_H - i*16, 0, *KADOMATSU, 0)
                 pyxel.blt(WINDOW_W - 16, WINDOW_H - i*16, 0, *KADOMATSU, 0)
 
-            self.snow()
+            # self.snow()
     
     def draw_kuchan(self, pos: list[int, int]):
         pyxel.blt(int(pos[0]), int(pos[1]), 0, *KUCHAN, 0)
@@ -160,8 +159,8 @@ class App:
         pyxel.blt(int(WINDOW_W//2) - int(16 * -0.5), int(10), 0, *LETTER_DO, 0)
         pyxel.blt(int(WINDOW_W//2) - int(16 * -1.5), int(10), 0, *LETTER_SHI, 0)
     
-    def snow(self):
-        for flake in self.snowflakes:
-            pyxel.pset(flake[0], flake[1], pyxel.COLOR_WHITE)
+    # def snow(self):
+    #     for flake in self.snowflakes:
+    #         pyxel.pset(flake[0], flake[1], pyxel.COLOR_WHITE)
 
 App()
