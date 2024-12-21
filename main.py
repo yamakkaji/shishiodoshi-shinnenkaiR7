@@ -104,10 +104,12 @@ class App:
 
             self.draw_mic_stand_shimote(self.initial_kuchan_pos)
             self.draw_mic_stand_kamite(self.initial_tsukaji_pos)
-
-            for i in range(WINDOW_H//16 + 1):
-                pyxel.blt(0, WINDOW_H - i*16, 0, *KADOMATSU, 0)
-                pyxel.blt(WINDOW_W - 16, WINDOW_H - i*16, 0, *KADOMATSU, 0)
+            
+            pyxel.blt(0, WINDOW_H - 16, 0, *KADOMATSU, 0)
+            pyxel.blt(WINDOW_W - 16, WINDOW_H - 16, 0, *KADOMATSU, 0)
+            # for i in range(WINDOW_H//16 + 1):
+            #     pyxel.blt(0, WINDOW_H - i*16, 0, *KADOMATSU, 0)
+            #     pyxel.blt(WINDOW_W - 16, WINDOW_H - i*16, 0, *KADOMATSU, 0)
 
             self.snow()
     
