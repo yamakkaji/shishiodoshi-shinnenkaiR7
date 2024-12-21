@@ -31,10 +31,16 @@ KADOMATSU = (32, 80, 15, 15)
 
 BGM = 0
 
+SCENE_TITLE = 0
+SCENE_CONCERT = 1
+
 class App:
     def __init__(self):
         pyxel.init(WINDOW_W, WINDOW_H)
         pyxel.load("./assets/keion.pyxres")
+        self.scene = SCENE_TITLE
+        self.music_on = False
+
         self.kuchan_pos = [WINDOW_W//2 - (16 + 2) * -1, WINDOW_H//2 + 5]
         self.iwaki_pos = [WINDOW_W//2 - (16 + 2) * 1, WINDOW_H//2]
         self.saito_pos = [WINDOW_W//2 - 8, WINDOW_H//2 - 20]
@@ -47,18 +53,14 @@ class App:
 
         self.snowflakes = [[np.random.randint(0, WINDOW_W), np.random.randint(0, WINDOW_H)] for _ in range(100)]
         
-        pyxel.playm(0, loop=True)
+        # pyxel.playm(0, loop=True)
         pyxel.run(self.update, self.draw)
-        
+
+    def update_title_scene(self):
+        if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT) or pyxel.btnp(pyxel.KEY_KP_ENTER):
+            self.scene = SCENE_CONCERT
 
     def update(self):
-        # Random walk for each character (Kuchan, Iwaki, Saito, Tsukaji), but stay in the window
-        self.kuchan_pos = np.clip(np.array(self.kuchan_pos) + np.random.randint(-1, 2, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
-        self.iwaki_pos = np.clip(np.array(self.iwaki_pos) + np.random.randint(-1, 2, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
-        self.saito_pos = np.clip(np.array(self.saito_pos) + np.random.randint(-1, 2, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
-        self.tsukaji_pos = np.clip(np.array(self.tsukaji_pos) + np.random.randint(-1, 2, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
-
-
         # Update snowflakes
         for flake in self.snowflakes:
             flake[1] += 1
@@ -66,31 +68,48 @@ class App:
                 flake[0] = np.random.randint(0, WINDOW_W)
                 flake[1] = 0
 
+        if self.scene == SCENE_TITLE:
+            self.update_title_scene()
+        elif self.scene == SCENE_CONCERT:
+            if self.music_on == False:
+                pyxel.playm(0, loop=True)
+                self.music_on = True
+            # Random walk for each character (Kuchan, Iwaki, Saito, Tsukaji), but stay in the window
+            self.kuchan_pos = np.clip(np.array(self.kuchan_pos) + np.random.randint(-1, 2, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
+            self.iwaki_pos = np.clip(np.array(self.iwaki_pos) + np.random.randint(-1, 2, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
+            self.saito_pos = np.clip(np.array(self.saito_pos) + np.random.randint(-1, 2, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
+            self.tsukaji_pos = np.clip(np.array(self.tsukaji_pos) + np.random.randint(-1, 2, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
+
     def draw(self):
-        pyxel.cls(0)
+        if self.scene == SCENE_TITLE:
+            pyxel.text(WINDOW_W//2 - 20, WINDOW_H//2, "音が鳴ります ENTER/CLICK", pyxel.COLOR_WHITE)
+            
+        elif self.scene == SCENE_CONCERT:
+            pyxel.cls(0)
 
-        self.draw_shishiodoshi()
+            self.draw_shishiodoshi()
 
-        self.draw_saito(self.saito_pos)
-        self.draw_drums(self.initial_saito_pos)
-        self.draw_cymbals(self.initial_saito_pos)
+            self.draw_saito(self.saito_pos)
+            self.draw_drums(self.initial_saito_pos)
+            self.draw_cymbals(self.initial_saito_pos)
 
-        self.draw_kuchan(self.kuchan_pos)
-        self.draw_lespaul(self.kuchan_pos)
+            self.draw_kuchan(self.kuchan_pos)
+            self.draw_lespaul(self.kuchan_pos)
 
-        self.draw_iwaki(self.iwaki_pos)
-        self.draw_ibanez(self.iwaki_pos)
+            self.draw_iwaki(self.iwaki_pos)
+            self.draw_ibanez(self.iwaki_pos)
 
-        self.draw_tsukaji(self.tsukaji_pos)
-        self.draw_stingray(self.tsukaji_pos)
+            self.draw_tsukaji(self.tsukaji_pos)
+            self.draw_stingray(self.tsukaji_pos)
 
-        self.draw_mic_stand_shimote(self.initial_kuchan_pos)
-        self.draw_mic_stand_kamite(self.initial_tsukaji_pos)
+            self.draw_mic_stand_shimote(self.initial_kuchan_pos)
+            self.draw_mic_stand_kamite(self.initial_tsukaji_pos)
 
-        self.draw_kadomatsu([WINDOW_W - 16, WINDOW_H - 16])
-        self.draw_kadomatsu([0, WINDOW_H - 16])
+            for i in range(WINDOW_H//16 + 1):
+                pyxel.blt(0, WINDOW_H - i*16, 0, *KADOMATSU, 0)
+                pyxel.blt(WINDOW_W - 16, WINDOW_H - i*16, 0, *KADOMATSU, 0)
 
-        self.snow()
+            self.snow()
     
     def draw_kuchan(self, pos: list[int, int]):
         pyxel.blt(int(pos[0]), int(pos[1]), 0, *KUCHAN, 0)
