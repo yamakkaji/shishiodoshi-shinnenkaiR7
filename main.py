@@ -1,6 +1,6 @@
 import pyxel
 import numpy as np
-import time
+# import time
 
 WINDOW_ASPECT = 1 # 1.33
 WINDOW_SCALE = 100
@@ -66,11 +66,11 @@ class App:
         if self.music_on == False:
             pyxel.playm(0, loop=True)
             self.music_on = True
-        if self.time_start is None:
-            self.time_start = time.time()
-        elif self.time_start is not None:
-            if time.time() - self.time_start > 5:
-                self.random_walk_players()
+        # if self.time_start is None:
+        #     self.time_start = time.time()
+        # elif self.time_start is not None:
+        #     if time.time() - self.time_start > 5:
+        #         self.random_walk_players()
 
     def random_walk_players(self):
 
@@ -104,31 +104,32 @@ class App:
             elif mode == "fast":
                 self.tsukaji_pos = np.clip(np.array(self.tsukaji_pos) + np.random.randint(-2, 3, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
         
-        if time.time() - self.time_start > 3 and time.time() - self.time_start < 6:
-            kuchan_walk("slow")
-            iwaki_walk("slow")
-            saito_walk("slow")
-            tsukaji_walk("slow")
-        elif time.time() - self.time_start >= 6 and time.time() - self.time_start < 9:
-            kuchan_walk("fast")
-            iwaki_walk("slow")
-            saito_walk("fast")
-            tsukaji_walk("fast")
-        elif time.time() - self.time_start >= 9 and time.time() - self.time_start < 12:
-            kuchan_walk("fast")
-            iwaki_walk("slow")
-            saito_walk("super_fast")
-            tsukaji_walk("fast")
-        elif time.time() - self.time_start >= 12 and time.time() - self.time_start < 15:
-            kuchan_walk("fast")
-            iwaki_walk("slow")
-            saito_walk("super_super_fast")
-            tsukaji_walk("fast")
-        elif time.time() - self.time_start >= 15:
-            kuchan_walk("fast")
-            iwaki_walk("slow")
-            saito_walk("super_super_super_fast")
-            tsukaji_walk("fast")
+
+        # if time.time() - self.time_start > 3 and time.time() - self.time_start < 6:
+        #     kuchan_walk("slow")
+        #     iwaki_walk("slow")
+        #     saito_walk("slow")
+        #     tsukaji_walk("slow")
+        # elif time.time() - self.time_start >= 6 and time.time() - self.time_start < 9:
+        #     kuchan_walk("fast")
+        #     iwaki_walk("slow")
+        #     saito_walk("fast")
+        #     tsukaji_walk("fast")
+        # elif time.time() - self.time_start >= 9 and time.time() - self.time_start < 12:
+        #     kuchan_walk("fast")
+        #     iwaki_walk("slow")
+        #     saito_walk("super_fast")
+        #     tsukaji_walk("fast")
+        # elif time.time() - self.time_start >= 12 and time.time() - self.time_start < 15:
+        #     kuchan_walk("fast")
+        #     iwaki_walk("slow")
+        #     saito_walk("super_super_fast")
+        #     tsukaji_walk("fast")
+        # elif time.time() - self.time_start >= 15:
+        #     kuchan_walk("fast")
+        #     iwaki_walk("slow")
+        #     saito_walk("super_super_super_fast")
+        #     tsukaji_walk("fast")
     
     def update(self):
         # Update snowflakes
