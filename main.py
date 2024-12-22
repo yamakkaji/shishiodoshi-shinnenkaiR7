@@ -1,7 +1,8 @@
 import pyxel
 import numpy as np
+import time
 
-WINDOW_ASPECT = 1.33
+WINDOW_ASPECT = 1 # 1.33
 WINDOW_SCALE = 100
 WINDOW_H = int(WINDOW_SCALE * 1)
 WINDOW_W = int(WINDOW_SCALE * WINDOW_ASPECT)
@@ -40,6 +41,7 @@ class App:
         pyxel.load("./assets/keion.pyxres")
         self.scene = SCENE_TITLE
         self.music_on = False
+        self.time_start = None
 
         self.kuchan_pos = [WINDOW_W//2 - (16 + 2) * -1, WINDOW_H//2 + 5]
         self.iwaki_pos = [WINDOW_W//2 - (16 + 2) * 1, WINDOW_H//2]
@@ -59,7 +61,75 @@ class App:
     def update_title_scene(self):
         if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT) or pyxel.btnp(pyxel.KEY_KP_ENTER):
             self.scene = SCENE_CONCERT
+    
+    def update_concert_scene(self):
+        if self.music_on == False:
+            pyxel.playm(0, loop=True)
+            self.music_on = True
+        if self.time_start is None:
+            self.time_start = time.time()
+        elif self.time_start is not None:
+            if time.time() - self.time_start > 5:
+                self.random_walk_players()
 
+    def random_walk_players(self):
+
+        def kuchan_walk(mode: str = "slow"):
+            if mode == "slow":
+                self.kuchan_pos = np.clip(np.array(self.kuchan_pos) + np.random.randint(-1, 2, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
+            elif mode == "fast":
+                self.kuchan_pos = np.clip(np.array(self.kuchan_pos) + np.random.randint(-2, 3, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
+        
+        def iwaki_walk(mode: str = "slow"):
+            if mode == "slow":
+                self.iwaki_pos = np.clip(np.array(self.iwaki_pos) + np.random.randint(-1, 2, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
+            elif mode == "fast":
+                self.iwaki_pos = np.clip(np.array(self.iwaki_pos) + np.random.randint(-2, 3, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
+
+        def saito_walk(mode: str = "slow"):
+            if mode == "slow":
+                self.saito_pos = np.clip(np.array(self.saito_pos) + np.random.randint(-1, 2, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
+            elif mode == "fast":
+                self.saito_pos = np.clip(np.array(self.saito_pos) + np.random.randint(-2, 3, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
+            elif mode == "super_fast":
+                self.saito_pos = np.clip(np.array(self.saito_pos) + np.random.randint(-6, 7, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
+            elif mode == "super_super_fast":
+                self.saito_pos = np.clip(np.array(self.saito_pos) + np.random.randint(-16, 17, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
+            elif mode == "super_super_super_fast":
+                self.saito_pos = np.clip(np.array(self.saito_pos) + np.random.randint(-100, 101, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
+
+        def tsukaji_walk(mode: str = "slow"):
+            if mode == "slow":
+                self.tsukaji_pos = np.clip(np.array(self.tsukaji_pos) + np.random.randint(-1, 2, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
+            elif mode == "fast":
+                self.tsukaji_pos = np.clip(np.array(self.tsukaji_pos) + np.random.randint(-2, 3, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
+        
+        if time.time() - self.time_start > 3 and time.time() - self.time_start < 6:
+            kuchan_walk("slow")
+            iwaki_walk("slow")
+            saito_walk("slow")
+            tsukaji_walk("slow")
+        elif time.time() - self.time_start >= 6 and time.time() - self.time_start < 9:
+            kuchan_walk("fast")
+            iwaki_walk("slow")
+            saito_walk("fast")
+            tsukaji_walk("fast")
+        elif time.time() - self.time_start >= 9 and time.time() - self.time_start < 12:
+            kuchan_walk("fast")
+            iwaki_walk("slow")
+            saito_walk("super_fast")
+            tsukaji_walk("fast")
+        elif time.time() - self.time_start >= 12 and time.time() - self.time_start < 15:
+            kuchan_walk("fast")
+            iwaki_walk("slow")
+            saito_walk("super_super_fast")
+            tsukaji_walk("fast")
+        elif time.time() - self.time_start >= 15:
+            kuchan_walk("fast")
+            iwaki_walk("slow")
+            saito_walk("super_super_super_fast")
+            tsukaji_walk("fast")
+    
     def update(self):
         # Update snowflakes
         for flake in self.snowflakes:
@@ -71,18 +141,11 @@ class App:
         if self.scene == SCENE_TITLE:
             self.update_title_scene()
         elif self.scene == SCENE_CONCERT:
-            if self.music_on == False:
-                pyxel.playm(0, loop=True)
-                self.music_on = True
-            # Random walk for each character (Kuchan, Iwaki, Saito, Tsukaji), but stay in the window
-            self.kuchan_pos = np.clip(np.array(self.kuchan_pos) + np.random.randint(-1, 2, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
-            self.iwaki_pos = np.clip(np.array(self.iwaki_pos) + np.random.randint(-1, 2, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
-            self.saito_pos = np.clip(np.array(self.saito_pos) + np.random.randint(-1, 2, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
-            self.tsukaji_pos = np.clip(np.array(self.tsukaji_pos) + np.random.randint(-1, 2, 2), 0, [WINDOW_W - 16, WINDOW_H - 16])
+            self.update_concert_scene()
 
     def draw(self):
         if self.scene == SCENE_TITLE:
-            pyxel.text(WINDOW_W//2 - 20, WINDOW_H//2, "音が鳴ります ENTER/CLICK", pyxel.COLOR_WHITE)
+            pyxel.text(10, WINDOW_H//2 - 10, "CAUTION\n Sound will be played\n \nENTER or CLICK", pyxel.COLOR_WHITE)
             
         elif self.scene == SCENE_CONCERT:
             pyxel.cls(0)
